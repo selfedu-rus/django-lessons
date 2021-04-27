@@ -1,0 +1,47 @@
+ssh localhost -p222
+
+mkdir -p ~/.beget/tmp
+cd ~/.beget/tmp/
+
+wget ftp://sourceware.org/pub/libffi/libffi-3.2.1.tar.gz
+tar -xf libffi-3.2.1.tar.gz && cd libffi-3.2.1
+./configure --prefix $HOME/.local LDFLAGS="-L/usr/local/lib"
+make -j33 && make install
+
+cd ~
+
+mkdir -p ~/.local/include
+cp x86_64-unknown-linux-gnu/include/ffi.h ~/.local/include/
+cp x86_64-unknown-linux-gnu/include/ffitarget.h ~/.local/include/
+
+cd ~/.beget/tmp
+wget https://www.python.org/ftp/python/3.8.3/Python-3.8.3.tgz
+tar -xf Python-3.8.3.tgz && cd Python-3.8.3
+
+./configure --prefix=$HOME/.local LDFLAGS="-L/usr/local/lib"
+
+make -j33 && make install
+~/.local/bin/python3.8 -V
+
+
+Настройка окружения virtualenv
+
+cd ~/sbalak.beget.tech
+
+~/.local/bin/pip3.8 install virtualenv
+~/.local/bin/python3.8 -m virtualenv djangoenv
+
+source djangoenv/bin/activate
+#deactivate
+
+which python
+
+pip install django==3.1.5
+
+django-admin.py startproject coolsite
+
+python3.8 -c "import django; print(django.get_version()); print(django.__file__)"
+
+#ln -s public_html public
+
+mkdir tmp; touch tmp/restart.txt
